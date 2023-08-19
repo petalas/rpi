@@ -1,5 +1,12 @@
 version: "3"
 
+networks:
+  private_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.8/29
+
 services:
   pihole:
     container_name: pihole
@@ -7,24 +14,31 @@ services:
     depends_on:
       - unbound
     network_mode: "host"
+    dns:
+      - 192.168.1.11 # Points to unbound
     environment:
       TZ: 'Europe/London'
       WEBPASSWORD: ""
+      FTLCONF_LOCAL_IPV4: 192.168.1.10 # Internal IP of pihole
+      DNS1: 192.168.1.11 # Unbound IP
+      DNS2: 192.168.1.11 # If we don't specify two, it will auto pick google.
     # Volumes store your data between container upgrades
     volumes:
-      - './etc-pihole:/etc/pihole'
-      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+      - './config/pihole/etc/pihole:/etc/pihole'
+      - './config/pihole/etc/dnsmasq.d:/etc/dnsmasq.d'
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     cap_add:
       - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
     restart: unless-stopped
 
-  unbound :
+  unbound:
     container_name: unbound
-    image: mvance/unbound-rpi:latest
-    ports:
-      - "5353:53/tcp"
-      - "5353:53/udp"
+    image: "klutchell/unbound:latest"
+    volumes:
+      - ./config/unbound/unbound.conf:/etc/unbound/custom.conf.d/unbound.conf
+    networks:
+      private_network:
+        ipv4_address: 192.168.1.11
     restart: unless-stopped
 
   unifi-controller:
@@ -33,7 +47,7 @@ services:
     environment:
       - MEM_LIMIT=1024
     volumes:
-      - /usr/local/volumes/unifi-controller:/config
+      - ./config/unifi-controller:/config
     ports:
       - 8443:8443
       - 3478:3478/udp
