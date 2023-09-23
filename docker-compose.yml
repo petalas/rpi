@@ -5,7 +5,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 192.168.1.8/29
+        - subnet: 192.168.1.8/29 # 192.168.1.9 - 192.168.1.14 ?
 
 services:
   pihole:
@@ -58,4 +58,28 @@ services:
       - 8880:8880 #optional
       - 6789:6789 #optional
       - 5514:5514/udp #optional
+    restart: unless-stopped
+
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE #optional
+    environment:
+      - TZ=Europe/London
+      - SERVERURL=10.241.215.247 # zerotier
+      - SERVERPORT=12345 #optional
+      - PEERS=ax1800 #optional
+      - PEERDNS=10.241.215.247 # pihole running on network mode host
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - PERSISTENTKEEPALIVE_PEERS= #optional
+      - LOG_CONFS=true #optional
+    volumes:
+      - ./config/wireguard:/config
+      - /lib/modules:/lib/modules #optional
+    ports:
+      - 12345:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
