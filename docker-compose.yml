@@ -72,8 +72,8 @@ services:
       - SSL_KEY_NAME=tls.key
       - TZ=Etc/UTC
     volumes:
-      - omada-data:/opt/tplink/EAPController/data
-      - omada-logs:/opt/tplink/EAPController/logs
+      - ./config/omada-controller/data:/opt/tplink/EAPController/data
+      - ./config/omada-controller/logs:/opt/tplink/EAPController/logs
 
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
@@ -98,7 +98,3 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
-
-volumes:
-  omada-data:
-  omada-logs:
