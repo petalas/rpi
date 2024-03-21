@@ -1,3 +1,5 @@
-config/wireguard
+config/wg-easy
 config/pihole/etc/pihole
 config/omada-controller
+
+.env
