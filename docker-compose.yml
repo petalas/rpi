@@ -6,8 +6,6 @@ networks:
       driver: default
       config:
         - subnet: 192.168.1.8/29 # 192.168.1.9 - 192.168.1.14 ?
-  vpn:
-    driver: bridge
 
 services:
   pihole:
@@ -47,7 +45,8 @@ services:
     image: ghcr.io/wg-easy/wg-easy
     container_name: wg-easy
     networks:
-      vpn:
+      private_network:
+        ipv4_address: 192.168.1.12
     environment:
       PASSWORD: $WG_PASSWORD
       PORT: 12345
