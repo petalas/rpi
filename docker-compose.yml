@@ -57,7 +57,7 @@ services:
     volumes:
       - ./config/wg-easy:/etc/wireguard
     ports:
-      - "54321:51820/udp" # WG port (will always listen to 51820 inside the container)
+      - "54321:54321/udp" # WG port
       - "12345:12345/tcp" # web UI port
     cap_add:
       - NET_ADMIN
