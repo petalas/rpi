@@ -53,7 +53,7 @@ services:
       WG_PORT: 54321
       WG_DEFAULT_DNS: 192.168.1.10 # Internal IP of pihole
       WG_HOST: 140.228.73.215
-      WG_MTU: 1500
+      WG_MTU: 1420
     volumes:
       - ./config/wg-easy:/etc/wireguard
     ports:
