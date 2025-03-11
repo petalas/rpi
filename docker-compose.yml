@@ -33,7 +33,7 @@ services:
 
   unbound:
     container_name: unbound
-    image: "klutchell/unbound:latest"
+    image: klutchell/unbound:latest
     volumes:
       - ./config/unbound/unbound.conf:/etc/unbound/custom.conf.d/unbound.conf
     networks:
@@ -69,7 +69,7 @@ services:
 
   omada-controller:
     container_name: omada-controller
-    image: mbentley/omada-controller:5.13
+    image: mbentley/omada-controller:latest
     restart: unless-stopped
     ulimits:
       nofile:
